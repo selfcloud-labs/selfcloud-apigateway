@@ -1,0 +1,88 @@
+server:
+  port: 8099
+#debug: true
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+
+selfcloud-apigateway:
+  security:
+    host: ${SECURITY_HOST:localhost}
+
+spring:
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+#    username: ${INVOICES_DB_USERNAME:invoices}
+#    password: ${INVOICES_DB_PASSWORD:invoices}
+#    url: jdbc:mysql://${SECURITY_HOST_IP:localhost}:3306/invoices
+    driver-class-name: org.h2.Driver
+  main:
+    web-application-type: reactive
+  cloud:
+#    gateway:
+#      routes:
+#        - id: announcement-route
+#          uri: ${ANNOUNCEMENT_ROUTE_URI:http://localhost:8091}
+#          predicates:
+#            - Path=/announcements/**
+#          filters:
+#            - PrefixPath=/api/v1
+#            - name: AuthenticationPrefilter
+#              args:
+#                headerName: Authorization
+#        - id: order-route
+#          uri: ${ORDER_ROUTE_URI:http://localhost:8091}
+#          predicates:
+#            - Path=/orders/**
+#          filters:
+#            - PrefixPath=/api/v1
+#            - name: AuthenticationPrefilter
+#              args:
+#                headerName: Authorization
+#        - id: authentication-route
+#          uri: ${AUTHENTICATION_ROUTE_URI:http://localhost:8090}
+#          predicates:
+#            - Path=/auth/**
+#          filters:
+#            - PrefixPath=/api/v1
+    config:
+      profile: dev
+  config:
+    import: optional:configserver:http://clouduser:configserver705!@localhost:8888
+  application:
+    name: selfcloud-apigateway
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    gateway:
+      enabled: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+selfcloud-security:
+  jwt:
+    #TODO
+    secret-key: ${JWT_SECURITY_KEY:3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b}
+    expiration-time: 3600000000
+eventuatelocal:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+  zookeeper:
+    connection:
+      string: localhost:2181
