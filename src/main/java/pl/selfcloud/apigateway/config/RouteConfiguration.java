@@ -5,7 +5,6 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.selfcloud.apigateway.filter.AuthenticationPrefilter;
 import pl.selfcloud.apigateway.filter.JwtValidationGatewayFilterFactory;
 
 @Configuration
@@ -17,12 +16,12 @@ public class RouteConfiguration {
   @Bean
   public RouteLocator routes(
       RouteLocatorBuilder builder,
-      AuthenticationPrefilter authFilter,
       JwtValidationGatewayFilterFactory jwtValidationGatewayFilterFactory) {
     return builder.routes()
         .route("authentication-route", r -> r.path("/auth/**")
             .filters(f -> f.prefixPath("/api/v1"))
             .uri("http://" + host +":8090"))
+
         .route("announcement-route", r -> r.path("/announcements/**")
             .filters(f ->
                 f.prefixPath("/api/v1")
